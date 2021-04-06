@@ -11,7 +11,7 @@ The temporary directory is automatically removed on program exit.
 
 ```rust,edition2018,no_run
 use error_chain::error_chain;
-use std::io::copy;
+use std::io::Write;
 use std::fs::File;
 use tempfile::Builder;
 
@@ -41,8 +41,8 @@ async fn main() -> Result<()> {
         println!("will be located under: '{:?}'", fname);
         File::create(fname)?
     };
-    let content =  response.text().await?;
-    copy(&mut content.as_bytes(), &mut dest)?;
+    let content =  response.bytes().await?;
+    dest.write_all(&content)?;
     Ok(())
 }
 ```
